@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  document_db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: document_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - document_db_data:/var/lib/postgresql/data
+
+  question_db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: question_db
+    ports:
+      - "5434:5432"
+    volumes:
+      - question_db_data:/var/lib/postgresql/data
+
+  document_service:
+    build: ./document_service
+    environment:
+      - DOCUMENT_DATABASE_URL=postgresql+asyncpg://postgres:postgres@document_db:5432/document_db
+    depends_on:
+      - document_db
+    ports:
+      - "8001:8001"
+
+  question_service:
+    build: ./question_service
+    environment:
+      - QUESTION_DATABASE_URL=postgresql+asyncpg://postgres:postgres@question_db:5432/question_db
+    depends_on:
+      - question_db
+      - document_service
+    ports:
+      - "8002:8002"
+
+volumes:
+  document_db_data:
+  question_db_data:
