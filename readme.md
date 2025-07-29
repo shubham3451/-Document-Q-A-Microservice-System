@@ -1,4 +1,3 @@
-````markdown
 # 🧠 Document Q&A Microservice System
 
 This system simulates a backend architecture for an **AI document Q&A platform**, using Python microservices with FastAPI, PostgreSQL, and async background tasks.
